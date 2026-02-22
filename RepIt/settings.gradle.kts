@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RepIt"
+rootProject.name = "repit"
 include(":app")
- 
