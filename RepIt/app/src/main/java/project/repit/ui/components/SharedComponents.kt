@@ -18,11 +18,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +46,12 @@ import project.repit.model.Routine
 import project.repit.ui.theme.DarkerGray
 import project.repit.ui.theme.SoftViolet
 
+/**
+ * Représente les différentes pages accessibles via la barre de navigation inférieure.
+ *
+ * @param label Le nom de la page à afficher.
+ * @param icon L'icône associée à la page.
+ */
 enum class AppPage(val label: String, val icon: ImageVector) {
     Home("Accueil", Icons.Default.Home),
     Routines("Défis", Icons.Default.FitnessCenter),
@@ -54,6 +60,11 @@ enum class AppPage(val label: String, val icon: ImageVector) {
     Profile("Profil", Icons.Default.Person)
 }
 
+/**
+ * Affiche la barre de navigation inférieure de l'application.
+ *
+ * @param navController Le contrôleur de navigation pour gérer les déplacements entre les pages.
+ */
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,7 +75,7 @@ fun BottomNavigationBar(navController: NavController) {
         shadowElevation = 8.dp
     ) {
         Column {
-            Divider()
+            HorizontalDivider()
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,16 +91,10 @@ fun BottomNavigationBar(navController: NavController) {
                             .weight(1f)
                             .clickable { 
                                 navController.navigate(page.name) {
-                                    // Pop up to the start destination of the graph to
-                                    // avoid building up a large stack of destinations
-                                    // on the back stack as users select items
                                     popUpTo(navController.graph.startDestinationId) {
                                         saveState = true
                                     }
-                                    // Avoid multiple copies of the same destination when
-                                    // reselecting the same item
                                     launchSingleTop = true
-                                    // Restore state when reselecting a previously selected item
                                     restoreState = true
                                 }
                             }
@@ -121,12 +126,23 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
+/**
+ * Affiche une carte présentant les détails d'une routine.
+ *
+ * @param routine La routine à afficher.
+ * @param onEdit Le callback à appeler lorsque l'utilisateur clique sur le bouton de modification.
+ * @param onDelete Le callback à appeler lorsque l'utilisateur clique sur le bouton de suppression.
+ */
 @Composable
 fun RoutineBox(routine: Routine, onEdit: () -> Unit, onDelete: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(text = routine.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text(text = routine.description, style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Catégorie : ${routine.category}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Début : ${routine.startAt}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Fin : ${routine.endAt}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Périodicité : ${routine.periodicity}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Priorité : ${routine.priority}", style = MaterialTheme.typography.bodySmall)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = onEdit) {
@@ -140,6 +156,14 @@ fun RoutineBox(routine: Routine, onEdit: () -> Unit, onDelete: () -> Unit) {
     }
 }
 
+/**
+ * Un champ de formulaire qui affiche une liste d'options dans un menu déroulant.
+ *
+ * @param label Le libellé du champ.
+ * @param options La liste des options à afficher.
+ * @param selectedOption L'option actuellement sélectionnée.
+ * @param onOptionSelected Le callback à appeler lorsque l'utilisateur sélectionne une nouvelle option.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownField(

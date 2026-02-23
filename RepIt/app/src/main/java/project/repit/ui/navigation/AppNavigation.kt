@@ -12,6 +12,12 @@ import project.repit.ui.screens.ProfileScreen
 import project.repit.ui.screens.RoutineScreen
 import project.repit.ui.screens.StatisticsScreen
 
+/**
+ * Gère la navigation principale de l'application à l'aide d'un NavHost.
+ *
+ * @param navController Le contrôleur de navigation pour gérer les déplacements entre les écrans.
+ * @param modifier Le modificateur à appliquer au NavHost.
+ */
 @Composable
 fun AppNavigation(
     navController: NavHostController,
